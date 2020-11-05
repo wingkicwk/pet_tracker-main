@@ -2,9 +2,8 @@ import select
 import socket
 from time import sleep
 import pymysql
-from binascii import hexlify
-import fcntl
-import struct
+#import fcntl
+#import struct
 
 HOST = "localhost"
 PORT = 3306
@@ -35,9 +34,10 @@ def run_server():
       else:
         data = s.recv(1024)
         if data != '':
-          mac = s.getpeername()
-          sql = "UPDATE `test`.`test` SET `test1` = '3' WHERE (`id` = '2')"
-          cursor.execute(sql)
+          pass
+          #mac = s.getpeername()
+          #sql = "UPDATE `test`.`test` SET `test1` = '3' WHERE (`id` = '2')"
+          #cursor.execute(sql)
           # update mysql
         else:
           socks.remove(s)
