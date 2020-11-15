@@ -1,0 +1,44 @@
+.ads{
+    position: relative;
+    /* margin-top: 0px;
+    margin-bottom: 10px;
+    margin-left: -310px; */
+    width: 400px;
+    height: 200px;
+    /* left: 50%; */
+    overflow: hidden;
+    /* background: #292929; */
+    border: 10px solid #fff;
+    
+  }
+  
+  
+  .imgg{
+    padding-top: 0px;
+    position: absolute;
+    /* left: 100px; */
+    background: #292929;
+    color: #e3e3e3;
+    width: 400px;
+    height: 200px; 
+  }
+  
+  /*reference https://www.w3.org/Style/Examples/007/slideshow.en.html  and https://codepen.io/nahuali/pen/Ahuiq and https://www.w3schools.com/cssref/sel_nth-child.asp*/
+  
+  img:nth-of-type(1){
+    animation: slideIn 15s linear 0s infinite;
+  }
+  img:nth-of-type(2){
+    animation: slideIn 15s linear 5s infinite;
+  }
+  img:nth-of-type(3){
+    animation: slideIn 15s linear 10s infinite;
+  }
+  
+  @keyframes slideIn{
+    0% {left: 600px;}
+    1% {left: 0;}
+    11% {left: 0;}
+    12% {left: -600px;}
+    100%{left: -600px;}
+  }

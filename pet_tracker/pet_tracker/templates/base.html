@@ -1,8 +1,18 @@
 {% load static %}
-{% load ads_tags %}
+
+
 <!DOCTYPE html>
 <html>
   <head>
+          <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+    <div class= "ads">
+        <img src="{% static 'img/petfood1.jpg' %}" class='imgg' alt="petfood1">
+        <img src="{% static 'img/petfood2.jpg' %}" class='imgg' alt="petfood2">
+        <img src="{% static 'img/petfood3.jpg' %}" class='imgg' alt="petfood3">
+    </div>
     <title>Add Map</title>
 
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCou8xeko0WL63aiJyMTfgKP7Y3DryfT2I&callback=initMap"
@@ -40,14 +50,6 @@
     <div id="map"></div>
     {% block main %}
 {% endblock %}
-{% render_block "js" %}
+
   </body>
 </html>
-
-
-
-
-
-
-
-

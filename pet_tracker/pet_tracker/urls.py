@@ -19,5 +19,4 @@ from django.conf.urls import include,url
 urlpatterns = [
     path('', include('app_pet_tracker.urls')),
     path('admin/', admin.site.urls),
-    url(r'^ads/', include('ads.urls')),
 ]
