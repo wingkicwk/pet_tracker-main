@@ -20,36 +20,48 @@
     <style type="text/css">
       /* Set the size of the div element that contains the map */
       #map {
-        height: 400px;
+        height: 600px;
         /* The height is 400 pixels */
         width: 100%;
         /* The width is the width of the web page */
       }
     </style>
-    <script>
-      // Initialize and add the map
-      function initMap() {
-        // The location of Uluru
-        const uluru = { lat: 53.350140, lng: -6.266155 };
-        // The map, centered at Uluru
-        const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 12,
-          center: uluru,
-        });
-        // The marker, positioned at Uluru
-        const marker = new google.maps.Marker({
-          position: uluru,
-          map: map,
-        });
+    <script type="text/javascript">
+  function initMap() {
+      x=navigator.geolocation;
+      x.getCurrentPosition(success, failure);
+
+      function success(position){
+          var myLat = position.coords.latitude;
+          var myLong = position.coords.longitude;
+
+          var coords = new google.maps.LatLng(myLat, myLong);
+
+          var mapOptions = {
+              zoom: 16,
+              center: coords,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+          }
+
+          var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+          var marker = new google.maps.Marker({map:map,position:coords});
       }
-    </script>
+
+      function failure(){
+      }
+  }
+  </script>
   </head>
   <body>
     <h3>My Google Maps Demo</h3>
     <!--The div element for the map -->
     <div id="map"></div>
     {% block main %}
-{% endblock %}
+    {% endblock %}
+
+    {% block homepage %}
+    {% endblock %}
+
 
   </body>
 </html>
