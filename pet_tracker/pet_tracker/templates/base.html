@@ -1,67 +1,12 @@
-{% load static %}
-
-
 <!DOCTYPE html>
-<html>
-  <head>
-          <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
-    <div class= "ads">
-        <img src="{% static 'img/petfood1.jpg' %}" class='imgg' alt="petfood1">
-        <img src="{% static 'img/petfood2.jpg' %}" class='imgg' alt="petfood2">
-        <img src="{% static 'img/petfood3.jpg' %}" class='imgg' alt="petfood3">
-    </div>
-    <title>Add Map</title>
-
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCou8xeko0WL63aiJyMTfgKP7Y3DryfT2I&callback=initMap"
-  type="text/javascript"></script>
-    <style type="text/css">
-      /* Set the size of the div element that contains the map */
-      #map {
-        height: 600px;
-        /* The height is 400 pixels */
-        width: 100%;
-        /* The width is the width of the web page */
-      }
-    </style>
-    <script type="text/javascript">
-  function initMap() {
-      x=navigator.geolocation;
-      x.getCurrentPosition(success, failure);
-
-      function success(position){
-          var myLat = position.coords.latitude;
-          var myLong = position.coords.longitude;
-
-          var coords = new google.maps.LatLng(myLat, myLong);
-
-          var mapOptions = {
-              zoom: 16,
-              center: coords,
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-          }
-
-          var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-          var marker = new google.maps.Marker({map:map,position:coords});
-      }
-
-      function failure(){
-      }
-  }
-  </script>
-  </head>
-  <body>
-    <h3>My Google Maps Demo</h3>
-    <!--The div element for the map -->
-    <div id="map"></div>
-    {% block main %}
-    {% endblock %}
-
-    {% block homepage %}
-    {% endblock %}
-
-
-  </body>
+{% load static %}
+<html lang="en">
+<head>
+{% block head %}
+{% endblock head %}
+</head>
+<body>
+{% block body %}
+{% endblock body%}
+</body>
 </html>

@@ -1,3 +1,12 @@
+/* Set the size of the div element that contains the map */
+#map {
+    height: 600px;
+    /* The height is 400 pixels */
+    width: 100%;
+    /* The width is the width of the web page */
+    }
+
+
 .ads{
     position: relative;
     /* margin-top: 0px;
@@ -9,11 +18,10 @@
     overflow: hidden;
     /* background: #292929; */
     border: 10px solid #fff;
-    
-  }
+    }
   
   
-  .imgg{
+.imgg{
     padding-top: 0px;
     position: absolute;
     /* left: 100px; */
@@ -21,7 +29,7 @@
     color: #e3e3e3;
     width: 400px;
     height: 200px; 
-  }
+    }
   
   /*reference https://www.w3.org/Style/Examples/007/slideshow.en.html  and https://codepen.io/nahuali/pen/Ahuiq and https://www.w3schools.com/cssref/sel_nth-child.asp*/
   

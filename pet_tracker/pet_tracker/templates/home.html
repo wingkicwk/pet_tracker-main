@@ -1,8 +1,25 @@
 {% extends "base.html" %}
-{% block main %}
-<p>home test</p>
-{% endblock main %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCou8xeko0WL63aiJyMTfgKP7Y3DryfT2I&callback=initMap"
+        type="text/javascript"></script>
+<!--Local javascript files-->
+<script src="{% static 'javascript/map.js' %}"></script>
 
-{% block js %}
+{% endblock head %}
 
-{% endblock %}
+{% block body %}
+<div class= "ads">
+    <img src="{% static 'img/petfood1.jpg' %}" class='imgg' alt="petfood1">
+    <img src="{% static 'img/petfood2.jpg' %}" class='imgg' alt="petfood2">
+    <img src="{% static 'img/petfood3.jpg' %}" class='imgg' alt="petfood3">
+</div>
+
+<h3>My Google Maps Demo</h3>
+
+<!--The div element for the map -->
+<div id="map"></div>
+
+
+{% endblock body%}
