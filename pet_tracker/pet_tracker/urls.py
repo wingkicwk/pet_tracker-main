@@ -16,7 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import include,url
+from app_pet_tracker import views
 urlpatterns = [
-    path('', include('app_pet_tracker.urls')),
+    # path('app_pet_tracker/', include('app_pet_tracker.urls', namespace='app_pet_tracker')),
+    path(r'^app_pet_tracker/', include(('app_pet_tracker.urls', 'app_pet_tracker'), namespace='app_pet_tracker')),
     path('admin/', admin.site.urls),
+    path('userManage/', include('userManage.urls', namespace='userManage')),
+    path('', views.home,name='home'),
 ]

@@ -1,6 +1,14 @@
 {% extends "base.html" %}
+
+
 {% block main %}
+
+<a href="{% url 'userManage:login' %}"><input type="button" value="Login/Register" name="login/register" id="login" onclick=""></a>
 <p>home test</p>
+<form action="/userManage/logout/" method="post" >
+    {% csrf_token %}
+    <input type="submit" id="logout" value="Logout">
+</form>
 {% endblock main %}
 
 {% block js %}

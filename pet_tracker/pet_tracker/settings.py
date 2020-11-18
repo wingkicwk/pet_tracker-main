@@ -11,24 +11,24 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
-
+from pet_tracker.config import database_config
+from pet_tracker.config import secret_key
+import sys
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+STATIC_URL = '/static/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8r_b%xcc)ap=&xs^207(%^8l1i@h%-7p98(+^f%4lms+x#p*5)'
+SECRET_KEY = secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'pet_tracker',
+    'userManage.apps.UsermanageConfig',
+    'app_pet_tracker.apps.AppPetTrackerConfig',
 
 ]
 
@@ -80,7 +82,12 @@ print("here: ", BASE_DIR)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(BASE_DIR / 'db.sqlite3'),
+        # 'NAME': str(BASE_DIR / 'db.sqlite3'),
+        'NAME': database_config['NAME'],
+        'USER': database_config['USER'],
+        'PASSWORD': database_config['PASSWORD'],
+        'HOST': database_config['HOST'],
+        'PORT': database_config['PORT'],        
     }
 }
 
@@ -121,7 +128,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+]
 
+AUTHENTICATION_BACKENDS = [
+        'userManage.views.UserLoginBackend',
+        'django.contrib.auth.backends.ModelBackend',
+]
 
 
