@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}"> -->
+{#    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">#}
+{#    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>#}
+    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+{#    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>#}
+    <!-- <script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script> -->
+    <style type="text/css">
+        .error_tip{float:left;height:30px;line-height:30px;margin-left:70px;color:#e62e2e;display: none}
+    </style>
+
+</head>
+<body>
+    <div class="container register">
+        <input id="alertinfo" value="{{ alertinfo }}" style="display: none">
+        <div class="row">
+            <div class="col-md-3 register-left">
+                <h4>Welcome back</h4>
+            </div>
+            <div class="col-md-9 register-right">
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link" id="home-tab" data-toggle="tab" href="{% url 'userManage:register' %}" role="tab" aria-controls="home" aria-selected="true">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#" role="tab" aria-controls="profile" aria-selected="false">Login</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <h3 class="register-heading">Login to your account:</h3>
+                        <div class="reg_form clearfix">
+                            <form id="login_form" action="/userManage/login/" method="post" onsubmit="">
+                            <div class="row register-form justify-content-center align-items-center">
+                                <div class="col-md-8 ">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="username" class="text-info">Username:</label><br>
+                                        <input type="text" name="username" id="username" class="form-control" value="{{ username }}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="password" class="text-info">Password:</label><br>
+                                        <input type="password" name="password" id="password" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="remember-me" class="text-info"><span>Remember me</span> <span><input id="remember-me" name="remember-me" type="checkbox"></span></label><br>
+                                        <input type="submit" name="submit" class="btnRegister"  value="Login" id="login_submit"/>
+                                    </div>
+                                    <span class="error_tip"><input id="loginerrmsg" value="{{ errmsg }}"></span>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="{% static 'js/login.js' %}"></script>
+</html>
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>

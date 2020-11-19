@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 {% block head %}
+<a href="{% url 'userManage:login' %}"><input type="button" value="Login/Register" name="login/register" id="login" onclick=""></a>
+<p>home test</p>
+<form action="/userManage/logout/" method="post" >
+    {% csrf_token %}
+    <input type="submit" id="logout" value="Logout">
+</form>
 <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCou8xeko0WL63aiJyMTfgKP7Y3DryfT2I&callback=initMap"
         type="text/javascript"></script>
