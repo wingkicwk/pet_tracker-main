@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'pet_tracker',
+    'app_pet_tracker',
     'userManage.apps.UsermanageConfig',
-    'app_pet_tracker.apps.AppPetTrackerConfig',
+    # 'app_pet_tracker.apps.AppPetTrackerConfig',
 
 ]
 
@@ -74,23 +75,32 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pet_tracker.wsgi.application'
-print("here: ", BASE_DIR)
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         # 'NAME': str(BASE_DIR / 'db.sqlite3'),
+#         'NAME': database_config['NAME'],
+#         'USER': database_config['USER'],
+#         'PASSWORD': database_config['PASSWORD'],
+#         'HOST': database_config['HOST'],
+#         'PORT': database_config['PORT'],
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
         # 'NAME': str(BASE_DIR / 'db.sqlite3'),
-        'NAME': database_config['NAME'],
-        'USER': database_config['USER'],
-        'PASSWORD': database_config['PASSWORD'],
-        'HOST': database_config['HOST'],
-        'PORT': database_config['PORT'],        
+        'NAME': 'pettracker',
+        'USER': 'orange',
+        'PASSWORD': 'asdf1234',
+        'HOST': 'pettracker.cx8vz93uf5cv.eu-west-1.rds.amazonaws.com',
+        'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
