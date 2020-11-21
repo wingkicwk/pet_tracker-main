@@ -18,12 +18,10 @@ from django.urls import path, include
 from django.conf.urls import include,url
 from app_pet_tracker import views
 urlpatterns = [
-    # path('app_pet_tracker/', include('app_pet_tracker.urls', namespace='app_pet_tracker')),
     url(r'^app_pet_tracker/', include(('app_pet_tracker.urls', 'app_pet_tracker'), namespace='app_pet_tracker')),
     path('admin/', admin.site.urls),
     path('userManage/', include('userManage.urls', namespace='userManage')),
     path('', views.home,name='home'),
-    path('post/',views.post,name='post'),
     url(r'^setupfence$', views.setupFence),
     url(r'^getfence$', views.getFence),
     url(r'^clearfence$', views.clearFence),
