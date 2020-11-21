@@ -27,28 +27,40 @@
         Point2(long): <input type="text" name="q2_long"><br>
         <input type="submit" name="setupfence" value="Submit">
     </form>
-    <p>{{ rlt }}</p>
+    <p>{{ setupfence }}</p>
 
 <!--get digital fence information-->
     <form action="/getfence" method="get">
         {% csrf_token %}
         <button type="submit" name="getfence">Digital Fence</button>
     </form>
-    <p>{{ rlt2 }}</p>
+    <!--
+        'getfence' is an object now.
+        how to use:
+            getfence.userid
+            getfence.lat1,getfence.lat2,getfence.long1,getfence.long2
+    -->
+    <p>{{ getfence }}</p>
 
 <!--clear digital fence information-->
     <form action="/clearfence" method="get">
         {% csrf_token %}
         <button type="submit" name="clearfence">Clear Digital Fence</button>
     </form>
-    <p>{{ rlt3 }}</p>
+    <p>{{ clearfence }}</p>
 
 <!--get device information-->
     <form action="/petposition" method="get">
         {% csrf_token %}
         <button type="submit" name="petposition">Pet Position</button>
     </form>
-    <p>{{ rlt4.lat }}</p>
+    <!--
+        'petposition' is an object now.
+        how to use:
+            petposition.deviceid,
+            petposition.lat, petposition.long
+    -->
+    <p>{{ petposition }}</p>
 
 <!--ads-->
 <div class= "ads">
