@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from .models import DeviceInformation,DigitalFence
 from userManage.models import User
+from django.http import JsonResponse
 
 # Create your views here.
 def home(request):
@@ -12,44 +13,48 @@ def setupFence(request):
     if request.POST:
         username = request.session.get('username') # get login user's username
         if str(username) == "None" : # for unlogin users
-            result = {"setupfence": "please login in!"}
+            result = {"response": "please login in!"}
         else:
             # save digital fence information to 'digitalfence' table in database
             digitalfencedata = DigitalFence(userid=username,lat1=request.POST['q1_lat'],long1=request.POST['q1_long'],lat2=request.POST['q2_lat'],long2=request.POST['q2_long']) #combine with 'login data'
             digitalfencedata.save()
             # render a test dictionary
-            result = {"setupfence": "digital fence set up successfully"}
+            result = {"response": "digital fence set up successfully"}
     else:
-        result = {"setupfence": "no request!"}
-    return render(request, "home.html", result)
+        result = {"response": "no request!"}
+    return JsonResponse(result, safe=False)
 
 #get - getfence
 def getFence(request):
     if request.GET:
         username = request.session.get('username') # get login user's username
         if str(username) == "None" : # for unlogin users
-            result =  {"getfence": "please login in!"}
+            result = {"response": "please login in!"}
         else:
             fencedata = DigitalFence.objects.filter(userid = username)
-            result = {"getfence": fencedata[0]}
+            result =  {"response": "get the data successfully!",
+                       "username": username,
+                       "lat1":fencedata[0].lat1,"long1":fencedata[0].long1,
+                       "lat2":fencedata[0].lat2,"long2":fencedata[0].long2
+                       }
     else:
-        result = {"setupfence": "no request!"}
-    return render(request, "home.html", result)
+        result = {"response": "no request!"}
+    return JsonResponse(result, safe=False)
 
 #get - clearfence
 def clearFence(request):
      if request.GET:
         username = request.session.get('username') # get login user's username
         if str(username) == "None" : # for unlogin users
-            result =  {"clearfence": "please login in!"}
+            result = {"response": "please login in!"}
         else:
             # set the longitude and latitude to zero with given user
             result = DigitalFence(userid=username,lat1=0,long1=0,lat2=0,long2=0)
             result.save()
-            result = {"clearfence": "you have cleared the stored data about the digital fence"}
+            result = {"response": "you have cleared the stored data about the digital fence"}
      else:
-         result = {"clearfence": "no request!"}
-     return render(request, "home.html", result)
+         result = {"response": "no request!"}
+     return JsonResponse(result, safe=False)
 
 
 # get - petpostion
@@ -57,7 +62,7 @@ def petPosition(request):
     if request.GET:
         username = request.session.get('username') # get login user's username
         if str(username) == "None" : # for unlogin users
-            result = {"petposition": "please login in!"}
+            result = {"response": "please login in!"}
         else:
             #get corresponding equipmentid with given username
             queryset = User.objects.filter(username = username)
@@ -65,10 +70,15 @@ def petPosition(request):
 
             #create a test user information to replace request.get.get('getfence')
             petposition = DeviceInformation.objects.filter(deviceid = equipmentid)
-            result = {"petposition": petposition[0]}
+            result = {"response": "get the data successfully!",
+                       "username": username,
+                       "deviceid":petposition[0].deviceid,
+                       "lat":petposition[0].lat,
+                       "long":petposition[0].long
+                       }
     else:
-         result = {"petposition": "no request!"}
-    return render(request, "home.html", result)
+         result = {"response": "no request!"}
+    return JsonResponse(result, safe=False)
 
 
 
