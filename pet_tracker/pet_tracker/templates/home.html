@@ -11,56 +11,42 @@
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCou8xeko0WL63aiJyMTfgKP7Y3DryfT2I&callback=initMap"
         type="text/javascript"></script>
 <!--Local javascript files-->
-<script src="{% static 'javascript/map.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{% static 'js/test.js' %}"></script>
 
 {% endblock head %}
 
 {% block body %}
 
-<!--digital fence-->
-<!--set up digital fence-->
+
+<!--ajax-->
+<div id="div0">
+    <h2>digital fence result</h2>
+</div>
     <form action="/setupfence" method="post">
         {% csrf_token %}
         Point1(lat): <input type="text" name="q1_lat"><br>
         Point1(long): <input type="text" name="q1_long"><br>
         Point2(lat): <input type="text" name="q2_lat"><br>
         Point2(long): <input type="text" name="q2_long"><br>
-        <input type="submit" name="setupfence" value="Submit">
+        <button id="setup">setup digital fence</button>
     </form>
-    <p>{{ setupfence }}</p>
 
-<!--get digital fence information-->
-    <form action="/getfence" method="get">
-        {% csrf_token %}
-        <button type="submit" name="getfence">Digital Fence</button>
-    </form>
-    <!--
-        'getfence' is an object now.
-        how to use:
-            getfence.userid
-            getfence.lat1,getfence.lat2,getfence.long1,getfence.long2
-    -->
-    <p>{{ getfence }}</p>
+<div id="div1">
+    <h2>digital fence result</h2>
+</div>
+<button id="getinfo">get digital fence</button>
 
-<!--clear digital fence information-->
-    <form action="/clearfence" method="get">
-        {% csrf_token %}
-        <button type="submit" name="clearfence">Clear Digital Fence</button>
-    </form>
-    <p>{{ clearfence }}</p>
+<div id="div2">
+    <h2>digital fence result</h2>
+</div>
+<button id="clear">clear  digital fence</button>
 
-<!--get device information-->
-    <form action="/petposition" method="get">
-        {% csrf_token %}
-        <button type="submit" name="petposition">Pet Position</button>
-    </form>
-    <!--
-        'petposition' is an object now.
-        how to use:
-            petposition.deviceid,
-            petposition.lat, petposition.long
-    -->
-    <p>{{ petposition }}</p>
+<div id="div3">
+    <h2>pet position result</h2>
+</div>
+<button id="pet">pet position</button>
+
 
 <!--ads-->
 <div class= "ads">

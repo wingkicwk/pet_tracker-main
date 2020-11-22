@@ -13,15 +13,15 @@ def setupFence(request):
     if request.POST:
         username = request.session.get('username') # get login user's username
         if str(username) == "None" : # for unlogin users
-            result = {"response": "please login in!"}
+            result = {"IsSuccess": "please login in!"}
         else:
             # save digital fence information to 'digitalfence' table in database
             digitalfencedata = DigitalFence(userid=username,lat1=request.POST['q1_lat'],long1=request.POST['q1_long'],lat2=request.POST['q2_lat'],long2=request.POST['q2_long']) #combine with 'login data'
             digitalfencedata.save()
             # render a test dictionary
-            result = {"response": "digital fence set up successfully"}
+            result = {"IsSuccess": "digital fence set up successfully"}
     else:
-        result = {"response": "no request!"}
+        result = {"IsSuccess": "no request!"}
     return JsonResponse(result, safe=False)
 
 #get - getfence
@@ -29,16 +29,16 @@ def getFence(request):
     if request.GET:
         username = request.session.get('username') # get login user's username
         if str(username) == "None" : # for unlogin users
-            result = {"response": "please login in!"}
+            result = {"IsSuccess": "please login in!"}
         else:
             fencedata = DigitalFence.objects.filter(userid = username)
-            result =  {"response": "get the data successfully!",
+            result =  {"IsSuccess": "get the data successfully!",
                        "username": username,
-                       "lat1":fencedata[0].lat1,"long1":fencedata[0].long1,
-                       "lat2":fencedata[0].lat2,"long2":fencedata[0].long2
+                       "Point1":[fencedata[0].lat1,fencedata[0].long1],
+                       "Point2":[fencedata[0].lat2,fencedata[0].long2]
                        }
     else:
-        result = {"response": "no request!"}
+        result = {"IsSuccess": "no request!"}
     return JsonResponse(result, safe=False)
 
 #get - clearfence
@@ -46,14 +46,14 @@ def clearFence(request):
      if request.GET:
         username = request.session.get('username') # get login user's username
         if str(username) == "None" : # for unlogin users
-            result = {"response": "please login in!"}
+            result = {"IsSuccess": "please login in!"}
         else:
             # set the longitude and latitude to zero with given user
             result = DigitalFence(userid=username,lat1=0,long1=0,lat2=0,long2=0)
             result.save()
-            result = {"response": "you have cleared the stored data about the digital fence"}
+            result = {"IsSuccess": "you have cleared the stored data about the digital fence"}
      else:
-         result = {"response": "no request!"}
+         result = {"IsSuccess": "no request!"}
      return JsonResponse(result, safe=False)
 
 
@@ -62,7 +62,7 @@ def petPosition(request):
     if request.GET:
         username = request.session.get('username') # get login user's username
         if str(username) == "None" : # for unlogin users
-            result = {"response": "please login in!"}
+            result = {"IsSuccess": "please login in!"}
         else:
             #get corresponding equipmentid with given username
             queryset = User.objects.filter(username = username)
@@ -70,14 +70,13 @@ def petPosition(request):
 
             #create a test user information to replace request.get.get('getfence')
             petposition = DeviceInformation.objects.filter(deviceid = equipmentid)
-            result = {"response": "get the data successfully!",
+            result = {"IsSuccess": "get the data successfully!",
                        "username": username,
                        "deviceid":petposition[0].deviceid,
-                       "lat":petposition[0].lat,
-                       "long":petposition[0].long
+                      "Point":[petposition[0].lat,petposition[0].long]
                        }
     else:
-         result = {"response": "no request!"}
+         result = {"IsSuccess": "no request!"}
     return JsonResponse(result, safe=False)
 
 
