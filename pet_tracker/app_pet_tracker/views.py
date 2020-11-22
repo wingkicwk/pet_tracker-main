@@ -11,6 +11,7 @@ def home(request):
 # post - setupfence
 def setupFence(request):
     if request.POST:
+        print("here for request-setup: ",request.POST)
         username = request.session.get('username') # get login user's username
         if str(username) == "None" : # for unlogin users
             result = {"IsSuccess": "please login in!"}
@@ -26,6 +27,7 @@ def setupFence(request):
 
 #get - getfence
 def getFence(request):
+    print("here for request-get: ",request.POST)
     if request.GET:
         username = request.session.get('username') # get login user's username
         if str(username) == "None" : # for unlogin users
