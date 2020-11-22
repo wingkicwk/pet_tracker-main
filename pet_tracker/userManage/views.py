@@ -12,6 +12,8 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password, check_password
 from userManage.models import User
+from django.http.response import JsonResponse
+from django.core import serializers
 
 # Create your views here.
 def register(request):
@@ -19,7 +21,7 @@ def register(request):
         # return register page
         return render(request, 'register.html')
     else:
-        context={'success':False}
+        context={}
 
         username = request.POST['username']
         password = request.POST['pwd']
@@ -29,23 +31,25 @@ def register(request):
 
         # lack user name
         if username == "":
-            return render(request, 'register.html', {'errormessage': 'Lack user name '})
-
+            context={'isSuccess':False, 'reason': 'Lack user name'}
+            return JsonResponse(context) 
         # lack password 
         if password == "":
-            return render(request, 'register.html', {'errormessage': 'Lack password'})
+            context={'isSuccess':False, 'reason': 'Lack password'}
+            return JsonResponse(context) 
 
         # two passwords are not the same
         if password != password_cfm:
-
-            return render(request, 'register.html', {'errormessage': 'two passwords not the same'})
+            context={'isSuccess':False, 'reason': 'two passwords not the same'}
+            return render(request, 'register.html', context)
+            return JsonResponse(context) 
 
         if equipmentID == "":
-            return render(request, 'register.html', {'errormessage': 'Lack equipmentID'})
-
+            context={'isSuccess':False, 'reason': 'Lack equipmentID'}
+            return JsonResponse(context) 
         if email == "":
-            return render(request, 'register.html', {'errormessage': 'Lack email'})
-
+            context={'isSuccess':False, 'reason': 'Lack email'}
+            return JsonResponse(context) 
         # check if the user has been registered
         try:
             user = User.objects.get(username=username)
@@ -54,8 +58,8 @@ def register(request):
             user = None
         # already a registered username
         if user:
-            print('user already exists')              
-            return render(request, 'register.html', {'errormessage': 'user already exists'})
+            context={'isSuccess':False, 'reason': 'user already exists'}           
+            return JsonResponse(context) 
         # check if the equipmentId has been registered
         try:
             EID = User.objects.get(equipmentID=equipmentID)
@@ -63,32 +67,32 @@ def register(request):
         # user does not exist
             EID = None
         # already a registered equipmentID
-        if EID:
-            print('equipmentID already exists')            
-            return render(request, 'register.html', {'errormessage': 'equipmentID already exists'})
-
+        if EID:  
+            context={'isSuccess':False, 'reason': 'equipmentID already exists'}        
+            return JsonResponse(context) 
         #  process the registration
         user = User()
         user.username = username
         user.password = make_password(password)
         user.equipmentID = equipmentID
         user.email = email
-
         user.save()
-        context={'alertinfo': 'Welcome to the pettracker', 'username': username, 'success':True}
-        return render(request, 'login.html', context)
+        # return JsonResponse(list(User.objects.values().filter(username=user.username) ), safe=False)
+        context = {'isSuccess':True}
+        user = User.objects.values().filter(username=user.username)
+        context['userInfo'] = list(user)
+        return JsonResponse(context)
 
 
 def login(request):
 
-    context={}
     # if request is from other pages
     if request.method == 'GET':
         if 'username' in request.COOKIES:
             username = request.COOKIES.get('username')
         else:
             username = ''
-        # show register page
+        # show login page
         return render(request, 'login.html', {'username': username})
 
     # if the request is from login html form
@@ -99,12 +103,13 @@ def login(request):
         
         # a logged in user 
         if request.session.get('username') == username:
-            context['username'] = request.session.get('username')
-            return render(request, "home.html", context)
+            context =  {'isSuccess':False,'reason':'duplicate operation, user already logged in '}   
+            return JsonResponse(context)            
 
         # no username or password
         if not all([username, password]):
-            return render(request, 'login.html', {'errormessage': 'missing username or password'})
+            context =  {'isSuccess':False,'reason':'missing username or password'}   
+            return JsonResponse(context)
 
         # check if it is a registered user
         try:
@@ -113,7 +118,8 @@ def login(request):
             user = None
 
         if user == None:
-            return render(request, 'login.html', {'errormessage': 'Username does not exist, cilck "register" to become a registered user.'})
+            context =  {'isSuccess':False,'reason':'Username does not exist, cilck "register" to become a registered user'}   
+            return JsonResponse(context)            
 
         # authenticate if the username and password matche
         user = authenticate(request=request, username=username, password=password)
@@ -134,12 +140,17 @@ def login(request):
                 response.set_cookie('username', username, max_age=7 * 24 * 3600)
             else:
                 response.delete_cookie('username')
+            context = {'isSuccess':True}
+            user = User.objects.values().filter(username=user.username)
+            context['userInfo'] = list(user)
+            return JsonResponse(context)
+            # return JsonResponse(list(User.objects.values().filter(username=user.username) ), safe=False)
 
-            context['username'] = username
-            return render(request, "home.html", context)
+
         # username and password not match
         else:
-            return render(request, 'login.html', {'errmsg': 'username does not match password', "username": username})
+            context = {'isSuccess':False,'reason':'username does not match password'}
+            return JsonResponse(context)
 
 # to authenticate the if the username and password match with each other
 class UserLoginBackend(ModelBackend):
@@ -156,12 +167,14 @@ class UserLoginBackend(ModelBackend):
 
 def logout(request):
     if request.method == 'POST':
-        print('About to logout now')
-        context={}
         try:
             print(request.session['username'])
             request.session.flush()   # flush delete session data
+            context = {'isSuccess':True,'message':'already logged out'}  
         except KeyError:
-            print('keyerror')      
-        return render(request, "home.html", context)
+            print('keyerror') 
+            context =  {'isSuccess':False,'reason':'key error'}   
+            return JsonResponse(context)
+         
+        return JsonResponse(context)
 
