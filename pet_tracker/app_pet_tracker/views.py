@@ -17,21 +17,23 @@ def setupFence(request):
                                         lat2=request.POST['q2_lat'],long2=request.POST['q2_long'])
         digitalfencedata.save()
         # render a test dictionary
-        result = {"IsSuccess": "digital fence set up successfully"}
+        result = {"IsSuccess": True}
     else:
-        result = {"IsSuccess": "no request!"}
+        result = {"IsSuccess": False,
+                  "reason": "no request!"}
     return JsonResponse(result, safe=False)
 
 #get - getfence
 def getFence(request):
     if request.GET:
         fencedata = DigitalFence.objects.filter(userid = request.POST['username'])
-        result =  {"IsSuccess": "get the data successfully!",
+        result =  {"IsSuccess": True,
                    "username": request.POST['username'],
                    "Point1":[fencedata[0].lat1,fencedata[0].long1],
                    "Point2":[fencedata[0].lat2,fencedata[0].long2]}
     else:
-        result = {"IsSuccess": "no request!"}
+        result = {"IsSuccess": False,
+                  "reason": "no request!"}
     return JsonResponse(result, safe=False)
 
 #get - clearfence
@@ -40,9 +42,10 @@ def clearFence(request):
         # set the longitude and latitude to zero with given user
         result = DigitalFence(userid=request.POST['username'],lat1=0,long1=0,lat2=0,long2=0)
         result.save()
-        result = {"IsSuccess": "you have cleared the stored data about the digital fence"}
+        result = {"IsSuccess": True}
      else:
-         result = {"IsSuccess": "no request!"}
+         result = {"reason": True,
+                   "IsSuccess": "no request!"}
      return JsonResponse(result, safe=False)
 
 
@@ -55,13 +58,14 @@ def petPosition(request):
 
         #create a test user information to replace request.get.get('getfence')
         petposition = DeviceInformation.objects.filter(deviceid = equipmentid)
-        result = {"IsSuccess": "get the data successfully!",
+        result = {"IsSuccess": True,
                    "username": request.POST['username'],
                    "deviceid":petposition[0].deviceid,
                   "Point":[petposition[0].lat,petposition[0].long]
                    }
     else:
-         result = {"IsSuccess": "no request!"}
+         result = {"IsSuccess": True,
+                   "reason": "no request!"}
     return JsonResponse(result, safe=False)
 
 
