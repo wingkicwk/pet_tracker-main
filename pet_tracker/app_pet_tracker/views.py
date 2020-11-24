@@ -44,8 +44,8 @@ def clearFence(request):
         result.save()
         result = {"IsSuccess": True}
      else:
-         result = {"reason": True,
-                   "IsSuccess": "no request!"}
+         result = {"IsSuccess": False,
+                   "reason": "no request!"}
      return JsonResponse(result, safe=False)
 
 
@@ -58,15 +58,16 @@ def petPosition(request):
 
         #create a test user information to replace request.get.get('getfence')
         petposition = DeviceInformation.objects.filter(deviceid = equipmentid)
-        result = {"IsSuccess": True,
+        result = { "IsSuccess": True,
                    "username": request.POST['username'],
                    "deviceid":petposition[0].deviceid,
-                  "Point":[petposition[0].lat,petposition[0].long]
+                   "Point":[petposition[0].lat,petposition[0].long]
                    }
     else:
-         result = {"IsSuccess": True,
+         result = {"IsSuccess": False,
                    "reason": "no request!"}
     return JsonResponse(result, safe=False)
+
 
 
 
