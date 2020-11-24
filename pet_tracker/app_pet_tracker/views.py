@@ -25,7 +25,7 @@ def setupFence(request):
 
 #get - getfence
 def getFence(request):
-    if request.GET:
+    if request.POST:
         fencedata = DigitalFence.objects.filter(userid = request.POST['username'])
         result =  {"IsSuccess": True,
                    "username": request.POST['username'],
@@ -38,7 +38,7 @@ def getFence(request):
 
 #get - clearfence
 def clearFence(request):
-     if request.GET:
+     if request.POST:
         # set the longitude and latitude to zero with given user
         result = DigitalFence(userid=request.POST['username'],lat1=0,long1=0,lat2=0,long2=0)
         result.save()
@@ -51,7 +51,7 @@ def clearFence(request):
 
 # get - petpostion
 def petPosition(request):
-    if request.GET:
+    if request.POST:
         #get corresponding equipmentid with given username
         queryset = User.objects.filter(username = request.POST['username'])
         equipmentid = queryset[0].equipmentID
