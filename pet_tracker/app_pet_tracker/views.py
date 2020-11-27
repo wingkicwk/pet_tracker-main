@@ -6,7 +6,7 @@ from django.http import JsonResponse
 
 # Create your views here.
 def home(request):
-    return render(request,'home.html')
+    return render(request,'index.html')
 
 # post - setupfence
 def setupFence(request):
@@ -49,7 +49,7 @@ def clearFence(request):
      return JsonResponse(result, safe=False)
 
 
-# get - petpostion
+# get - petposition
 def petPosition(request):
     if request.POST:
         #get corresponding equipmentid with given username
