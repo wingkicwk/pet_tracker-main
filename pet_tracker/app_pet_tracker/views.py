@@ -26,11 +26,17 @@ def setupFence(request):
 #get - getfence
 def getFence(request):
     if request.POST:
-        fencedata = DigitalFence.objects.filter(userid = request.POST['username'])
-        result =  {"IsSuccess": True,
-                   "username": request.POST['username'],
-                   "Point1":[fencedata[0].lat1,fencedata[0].long1],
-                   "Point2":[fencedata[0].lat2,fencedata[0].long2]}
+        try:
+            queryset = DigitalFence.objects.get(userid = request.POST['username'])
+            fencedata = DigitalFence.objects.filter(userid = request.POST['username'])
+            result =  {"IsSuccess": True,
+                       "username": request.POST['username'],
+                       "Point1":[fencedata[0].lat1,fencedata[0].long1],
+                       "Point2":[fencedata[0].lat2,fencedata[0].long2]}
+        except DigitalFence.DoesNotExist:
+            queryset = None
+            result = {"IsSuccess": False,
+                  "reason": "Please set the fence first!"}
     else:
         result = {"IsSuccess": False,
                   "reason": "no request!"}
@@ -52,17 +58,27 @@ def clearFence(request):
 # get - petposition
 def petPosition(request):
     if request.POST:
-        #get corresponding equipmentid with given username
-        queryset = User.objects.filter(username = request.POST['username'])
-        equipmentid = queryset[0].equipmentID
-
-        #create a test user information to replace request.get.get('getfence')
-        petposition = DeviceInformation.objects.filter(deviceid = equipmentid)
-        result = { "IsSuccess": True,
-                   "username": request.POST['username'],
-                   "deviceid":petposition[0].deviceid,
-                   "Point":[petposition[0].lat,petposition[0].long]
-                   }
+        try:
+            #get corresponding equipmentid with given username
+            queryset = User.objects.get(username = request.POST['username'])
+            userinfo = User.objects.filter(username = request.POST['username'])
+            equipmentid = userinfo[0].equipmentID
+            try:
+                #create a test user information to replace request.get.get('getfence')
+                petexist = DeviceInformation.objects.get(deviceid = equipmentid)
+                petposition = DeviceInformation.objects.filter(deviceid = equipmentid)
+                result = { "IsSuccess": True,
+                           "username": request.POST['username'],
+                           "deviceid":petposition[0].deviceid,
+                           "Point":[petposition[0].lat,petposition[0].long]
+                           }
+            except DeviceInformation.DoesNotExist:
+                petexist = None
+                result = {"IsSuccess": False,
+                       "reason": "no device info!"}
+        except User.DoesNotExist:
+                result = {"IsSuccess": False,
+                       "reason": "no user info!"}
     else:
          result = {"IsSuccess": False,
                    "reason": "no request!"}
