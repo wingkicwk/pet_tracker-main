@@ -1,0 +1,66 @@
+/** {*/
+    /*margin: 0;*/
+    /*padding: 0*/
+/*}*/
+.noAds{
+    width:40%;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+#app {
+    margin-top: 0px;
+}
+.weatherIcon{
+    height:33px;
+    position: relative;
+    top:10px;
+}
+.vertically_centered {
+    /*background: orange;*/
+    position: relative;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.parent_rel {
+    position: relative;
+}
+.infoPosition{
+    position: relative;
+    top:-5px;
+}
+.go_button {
+    width: 100%;
+}
+
+.info-right {
+    font-size: 15px;
+    float: right;
+}
+
+.weather {
+    margin-left: 6px;
+}
+.el-autocomplete{
+    width:100%;
+}
+
+.topBarPosition{
+    position: relative;
+    top:10px;
+}
+
+.stepsBlock{
+    padding: 0px 10px;
+    height:250px;
+}
+.stepsBlockTitle{
+    margin:0;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+#el-drawer__title{
+    margin-bottom: 0px;
+    padding:10px 10px 0 10px;
+}
