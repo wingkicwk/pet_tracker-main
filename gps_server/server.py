@@ -1,16 +1,16 @@
 import select
 import socket
 from time import sleep
-#import pymysql
+import pymysql
 from binascii import hexlify
 import fcntl
 import struct
 
-HOST = "localhost"
+HOST = "pettracker.cx8vz93uf5cv.eu-west-1.rds.amazonaws.com"
 PORT = 3306
-USER = "root"
-PASSWORD = ""
-DB = "test"
+USER = "orange"
+PASSWORD = "asdf1234"
+DB = "pettracker"
 
 def parse(message):
   res = []
@@ -33,24 +33,28 @@ def run_server():
 
   socks = [sockfd]
   outputs = []
-  #conn = pymysql.connect(host = HOST, port = PORT, user = USER, password = PASSWORD, db = DB)
-  #cursor = conn.cursor()
+  conn = pymysql.connect(host = HOST, port = PORT, user = USER, password = PASSWORD, db = DB)
+  cursor = conn.cursor()
   while True:
     readable = select.select(socks, outputs, socks)[0]
     for s in readable:
       if s is sockfd:
         connection = s.accept()[0]
         socks.append(connection)
+        print(0)
       else:
         data = s.recv(1024)
         data = bytes.decode(data)
         if data != '':
-          pass
+          #pass
           add = parse(data)
-          #sql = "UPDATE `test`.`test` SET `lat` = add[0], `lon` = add[1] WHERE (`id` = add[2])"
-          #cursor.execute(sql)
+          print(1)
+          sql = "UPDATE `device` SET `lat` = '%s', `long` = '%s' WHERE `deviceid` = '%s'" % (add[0], add[1], add[2])
+          cursor.execute(sql)
+          conn.commit()
           # update mysql
         else:
+          print(2)
           socks.remove(s)
           s.close()
     sleep(1)
