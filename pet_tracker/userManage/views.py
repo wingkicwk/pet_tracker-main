@@ -81,6 +81,7 @@ def register(request):
 
         #  initialise device lat nad long to 0
         deviceInfo = DeviceInformation()
+        deviceInfo.deviceid = equipmentID
         deviceInfo.lat = 0
         deviceInfo.long = 0
         deviceInfo.save()
