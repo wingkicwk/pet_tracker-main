@@ -34,7 +34,7 @@
         <div v-if="afterLogin">
             <el-row type="flex" justify="center">
                 <el-col :span="20">
-                    As our valued client, we remove all advertisements for you.
+                    Glad to see you, our valued client
                 </el-col>
 
 
@@ -108,7 +108,8 @@
       return {
         noAds: "../assets/NoAds.png",//img for NoADs
         loading: false,
-        prefixUrl: "http://127.0.0.1:8000",
+        prefixUrl: "",
+        deviceID:"",
         afterLogin: false,
         beforeLogin: true,
         signUpPage: false,
@@ -190,7 +191,15 @@
               }
           }
         ).then(response => {
-          console.log(response)
+
+          if(!response.data.isSuccess){
+            this.$notify.error({
+              title: 'Waring',
+              message: response.data.reason,
+              duration: 2000
+            });
+            return
+          }
           this.signUpPage = false
           this.beforeLogin = true
           this.$notify({
@@ -239,6 +248,7 @@
               type: 'success',
               duration: 2000
             });
+            this.deviceId=response.data.deviceid
             this.afterLogin = true;
             this.beforeLogin = false;
             this.currentStatus(this.users.username)
