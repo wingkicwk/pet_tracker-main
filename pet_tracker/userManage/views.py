@@ -14,6 +14,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from userManage.models import User
 from django.http.response import JsonResponse
 from django.core import serializers
+from app_pet_tracker.models import DeviceInformation
 
 # Create your views here.
 def register(request):
@@ -77,7 +78,14 @@ def register(request):
         user.equipmentID = equipmentID
         user.email = email
         user.save()
-        # return JsonResponse(list(User.objects.values().filter(username=user.username) ), safe=False)
+
+        #  initialise device lat nad long to 0
+        deviceInfo = DeviceInformation()
+        deviceInfo.deviceid = equipmentID
+        deviceInfo.lat = 0
+        deviceInfo.long = 0
+        deviceInfo.save()
+
         context = {'isSuccess':True}
         user = User.objects.values().filter(username=user.username)
         context['userInfo'] = list(user)

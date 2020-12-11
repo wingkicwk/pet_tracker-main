@@ -17,9 +17,8 @@
             </el-col>
 
 
-
-
-            <el-button @click="test" type="text" style="float:right; margin-left: 10px;margin-right: 10px">test</el-button>
+            <el-button @click="test" type="text" style="float:right; margin-left: 10px;margin-right: 10px">test
+            </el-button>
             <el-button :disabled="!isLogin" type="primary" @click="locatePet" style="float:right">Locate Pet</el-button>
 
             <!--<el-col :span="22" class="vertically_centered infoPosition">-->
@@ -41,31 +40,32 @@
 
         <el-row style="margin-bottom: 8px">
             <el-button @click="setFirst=true;" :disabled="!isLogin">Set Point1</el-button>
-            - {{marker[0]["lat"]}}
+            <!--<el-input v-model="marker[0]['lat']" placeholder="请输入内容"></el-input>-->
+            <!--<el-input v-model="marker[0]['lng']" placeholder="请输入内容"></el-input>-->
+            - {{marker[0]["lat"]}},{{marker[0]["lng"]}}
             <el-button @click="reset(marker[0])" :disabled="!isLogin">Reset</el-button>
         </el-row>
 
         <el-row style="margin-bottom: 8px">
             <el-button @click="setSecond=true;" :disabled="!isLogin">Set Point2</el-button>
-            - {{marker[1]["lat"]}}
+            - {{marker[1]["lat"]}},{{marker[1]["lng"]}}
             <el-button @click="reset(marker[1])" :disabled="!isLogin">Reset</el-button>
         </el-row>
         <!--<el-button @click="setSafeArea">generate safe area</el-button>-->
         <el-row style="margin-bottom: 8px">
-            <el-tooltip class="item" effect="dark" content="Join us to start" placement="top-start" style="margin-bottom: 8px">
+            <el-tooltip class="item" effect="dark" :disabled="isLogin" content="Join us to start" placement="top-start"
+                        style="margin-bottom: 8px">
             <span>
                 <el-button :disabled="!isLogin" type="primary" @click="setSafeArea">Generate Safe Area</el-button>
             </span>
 
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="Join us to start" placement="top-start">
-            </el-tooltip>
+
         </el-row>
 
-            <span>
+        <span>
 
             </span>
-
 
 
         <!--//弹出走丢弹框，调动手机振动接口-->
@@ -155,8 +155,9 @@
         mapSize: "width: 100%;height:520px",
         setPosition: false,
         count: 0,
+        mock_position: [[53.26315493851116,-6.2030094172131784], [53.263066, -6.202697], [53.262967, -6.202437], [53.262906, -6.202196], [53.262884, -6.202034], [53.262882, -6.201835], [53.262868, -6.201641], [53.262879, -6.201448], [53.262866, -6.201264], [53.262846, -6.201007]],
         toGetPosition: false,
-        prefixUrl: "http://127.0.0.1:8000",
+        prefixUrl: "",
         marker: {
           0: {
             full_name: 0,
@@ -173,6 +174,7 @@
         infoPosition: null,
         infoContent: null,
         infoOpened: false,
+        noNeedWarning: false,
         infoCurrentKey: null,
         infoOptions: {
           pixelOffset: {
@@ -191,11 +193,13 @@
           _this.username = value
           this.getPreSet()
           this.toGetPosition = true
+          this.$emit("status", value)
         } else {
           _this.userIcon = "primary";
           _this.isLogin = false
           _this.username = "null"
           _this.toGetPosition = false
+          this.$emit("status", value)
         }
       },
       updateCoordinates: function (evnt, key) {
@@ -210,6 +214,30 @@
       reset: function (marker) {
         marker.lat = 0
         marker.lng = 0
+        this.safeArea = []
+        axios({
+          method: 'post', url: this.prefixUrl + '/setupfence', data: {
+            username: this.username,
+            q1_lat: 0,
+            q1_long: 0,
+            q2_lat: 0,
+            q2_long: 0,
+          }, transformRequest: [
+            function (data) {
+              let ret = ''
+              for (let it in data) {
+                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+              }
+              ret = ret.substring(0, ret.lastIndexOf('&'))
+              return ret
+            }
+          ],
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }).then(response => {
+          console.log(response)
+        })
         this.areaObject.setMap(null)
       },
       toggleInfo: function (marker, key) {
@@ -301,9 +329,9 @@
       },
       test: function () {
         if (this.marker[0].lat > this.marker[1].lat) {
-          this.dogPosition.lat = Math.random() * (this.marker[0].lat - this.marker[1].lat) + this.marker[1].lat + 0.003
+          this.dogPosition.lat = Math.random() * (this.marker[0].lat - this.marker[1].lat) + this.marker[1].lat + 0.0003
         } else {
-          this.dogPosition.lat = Math.random() * (this.marker[1].lat - this.marker[0].lat) + this.marker[0].lat + 0.003
+          this.dogPosition.lat = Math.random() * (this.marker[1].lat - this.marker[0].lat) + this.marker[0].lat + 0.0003
         }
         if (this.marker[0].lng > this.marker[1].lng) {
           this.dogPosition.lng = Math.random() * (this.marker[0].lng - this.marker[1].lng) + this.marker[1].lng
@@ -376,6 +404,9 @@
         })
       },
       lostWaring: function () {
+        if (this.noNeedWarning) {
+          return
+        }
         this.$confirm('Your pet is out of safe area NOW! ', 'Waring', {
           confirmButtonText: 'LOCATE IT!',
           cancelButtonText: 'GOT IT',
@@ -388,11 +419,15 @@
           });
           this.locatePet()
         })
+        this.noNeedWarning = true;
+      },
+      sleep: function (d) {
+        for (var t = Date.now(); Date.now() - t <= d;) ;
       },
       locatePet: function () {
 //        this.$refs.mymap
         this.$refs.mymap.center = this.dogPosition
-        this.zoom = 18
+        this.zoom = 17
 
       },
       getPetLocation() {
@@ -400,6 +435,9 @@
         if (!_this.toGetPosition) {
           return
         }
+
+
+
         axios({
           method: 'post', url: this.prefixUrl + '/petposition', data: {
             username: _this.username
@@ -407,7 +445,6 @@
             function (data) {
               let ret = ''
               for (let it in data) {
-                // 如果 data[it] 是一个对象, 需要先使用 JSON.stringify, 再使用 encode
                 ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
               }
               ret = ret.substring(0, ret.lastIndexOf('&'))
@@ -418,8 +455,11 @@
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         }).then(response => {
-          console.log(response)
+
           if (response.data.IsSuccess) {
+            if (response.data.Point[0] == 0 || response.data.Point[1] == 0) {
+              return
+            }
             _this.dogPosition['lat'] = response.data.Point[0]
             _this.dogPosition['lng'] = response.data.Point[1]
           } else {
@@ -434,23 +474,24 @@
     },
     watch: {
       "dogPosition.lat": function () {
-//        console.log(this.dogPosition)
+        if (this.safeArea.length == 0) {
+          return
+        }
+        console.log(this.dogPosition.lat+"--------------"+this.dogPosition.lng)
         if (this.dogPosition.lat > this.marker[0]['lat'] && this.dogPosition.lat > this.marker[1]['lat']) {
-          console.log('warring1')
           this.lostWaring()
           return
         }
         if (this.dogPosition.lat < this.marker[0]['lat'] && this.dogPosition.lat < this.marker[1]['lat']) {
-          console.log('warring2')
           this.lostWaring()
           return
         }
         if (this.dogPosition.lng > this.marker[0]['lng'] && this.dogPosition.lng > this.marker[1]['lng']) {
-          console.log('warring3')
+          this.lostWaring()
           return
         }
         if (this.dogPosition.lng < this.marker[0]['lng'] && this.dogPosition.lng < this.marker[1]['lng']) {
-          console.log('warring4')
+          this.lostWaring()
           return
         }
 
@@ -470,7 +511,7 @@
             this.userPosition = pos
           })
       }
-      setInterval(this.getPetLocation, 5000)
+      setInterval(this.getPetLocation, 8000)
     },
     computed: {
       google: gmapApi,

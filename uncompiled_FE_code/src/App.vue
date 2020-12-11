@@ -1,15 +1,13 @@
 <template>
     <div id="app">
         <Ads v-if="!afterLogin" id="ads"></Ads>
-        <!--<Bar @child2="parent2"></Bar>-->
-        <!--<Map></Map>-->
-        <Map></Map>
+        <Map @status="changeStatus"></Map>
     </div>
 
 </template>
 
 <script>
-//  import Bar from './components/Bar.vue'
+
   import Ads from './components/Ads.vue'
 import Map from './components/Map.vue'
 
@@ -23,13 +21,17 @@ import Map from './components/Map.vue'
         afterLogin:false
       }
     },methods:{
-      parent2:function (data) {
-        this.afterLogin=data
+
+      changeStatus:function (data) {
+        if(data!="null"){
+          this.afterLogin=true
+        }else{
+          this.afterLogin=false
+        }
       }
     },
     components: {
       Ads,
-//      Bar,
       Map
     }
   }
