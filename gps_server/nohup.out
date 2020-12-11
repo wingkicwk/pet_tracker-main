@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "server.py", line 64, in <module>
+    run_server()
+  File "server.py", line 39, in run_server
+    readable = select.select(socks, outputs, socks)[0]
+KeyboardInterrupt

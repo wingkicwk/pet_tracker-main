@@ -38,25 +38,29 @@ def run_server():
   while True:
     readable = select.select(socks, outputs, socks)[0]
     for s in readable:
-      if s is sockfd:
-        connection = s.accept()[0]
-        socks.append(connection)
-        print(0)
-      else:
-        data = s.recv(1024)
-        data = bytes.decode(data)
-        if data != '':
-          #pass
-          add = parse(data)
-          print(1)
-          sql = "UPDATE `device` SET `lat` = '%s', `long` = '%s' WHERE `deviceid` = '%s'" % (add[0], add[1], add[2])
-          cursor.execute(sql)
-          conn.commit()
-          # update mysql
+      try:
+        if s is sockfd:
+          connection = s.accept()[0]
+          socks.append(connection)
+          print(0)
         else:
-          print(2)
-          socks.remove(s)
-          s.close()
+          data = s.recv(1024)
+          data = bytes.decode(data)
+          if data != '':
+            #pass
+            add = parse(data)
+            #print(1)
+            print(add)
+            sql = "UPDATE `device` SET `lat` = '%s', `long` = '%s' WHERE `deviceid` = '%s'" % (add[0], add[1], add[2])
+            cursor.execute(sql)
+            conn.commit()
+            # update mysql
+          else:
+            print(2)
+            socks.remove(s)
+            s.close()
+      except:
+        pass
     sleep(1)
 
 

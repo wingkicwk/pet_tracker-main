@@ -101,10 +101,7 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         
-        # a logged in user 
-        if request.session.get('username') == username:
-            context =  {'isSuccess':False,'reason':'duplicate operation, user already logged in '}   
-            return JsonResponse(context)            
+        # a logged in user           
 
         # no username or password
         if not all([username, password]):
